@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+require 'crx_unpack'
+
+crx = ARGV.shift
+dest = ARGV.shift
+unless crx && dest
+  puts <<USAGE
+Usage: #{File.basename($0)} extension.crx dest
+
+USAGE
+  exit!
+end
+
+CrxUnpack.unpack_contents_from_file(crx, dest)
