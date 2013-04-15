@@ -1,6 +1,6 @@
 # CrxUnpack
 
-TODO: Write a gem description
+Unpack [Chrome extension (crx)](http://developer.chrome.com/extensions/crx.html) file
 
 ## Installation
 
@@ -18,7 +18,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'crx_unpack'
+
+data = open('extension.crx', 'rb').read
+crx = CrxUnpack.unpack(data)
+crx.zip #=> zip data of extension contents
+
+# unzip extension contents into `./extension' directory
+CrxUnpack.unpack_contents_from_file('extension.crx', './extension')
+```
 
 ## Contributing
 

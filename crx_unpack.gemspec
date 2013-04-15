@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = CrxUnpack::VERSION
   spec.authors       = ["Kensuke Nagae"]
   spec.email         = ["kyanny@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Unpack Chrome extension (crx) file}
+  spec.summary       = %q{Unpack Chrome extension (crx) file}
   spec.homepage      = ""
   spec.license       = "MIT"
 
