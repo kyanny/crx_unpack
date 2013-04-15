@@ -1,5 +1,7 @@
 # CrxUnpack
 
+[![Build Status](https://travis-ci.org/kyanny/crx_unpack.png)](https://travis-ci.org/kyanny/crx_unpack)
+
 Unpack [Chrome extension (crx)](http://developer.chrome.com/extensions/crx.html) file
 
 ## Installation
