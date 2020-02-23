@@ -1,5 +1,5 @@
 require "crx_unpack/version"
-require 'zip/zip'
+require 'zip'
 require 'fileutils'
 
 class CrxUnpack
@@ -37,7 +37,7 @@ class CrxUnpack
       open(zip_file, 'wb'){ |f| f.write zip }
 
       $stdout.reopen('/dev/null') # Ignore `Invalid date/time in zip entry' warning
-      zf = Zip::ZipFile.new(zip_file)
+      zf = Zip::File.new(zip_file)
       zf.each do |entry|
         zf.extract(entry, entry.to_s)
       end
