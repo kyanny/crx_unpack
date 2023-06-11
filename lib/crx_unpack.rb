@@ -1,5 +1,5 @@
 require "crx_unpack/version"
-require 'zip/zip'
+require 'zip'
 require 'fileutils'
 
 class CrxUnpack
@@ -8,11 +8,20 @@ class CrxUnpack
   def unpack(data)
     @magic = data.slice!(0, 4)
     @version = data.slice!(0, 4)
-    @public_key_length = data.slice!(0, 4).unpack("i*")[0]
-    @signature_length = data.slice!(0, 4).unpack("i*")[0]
-    @public_key = data.slice!(0, public_key_length)
-    @signature = data.slice!(0, signature_length)
-    @zip = data
+    case @version
+    when "\x02\x00\x00\x00"
+      @public_key_length = data.slice!(0, 4).unpack("i*")[0]
+      @signature_length = data.slice!(0, 4).unpack("i*")[0]
+      @public_key = data.slice!(0, public_key_length)
+      @signature = data.slice!(0, signature_length)
+      @zip = data
+    when "\x03\x00\x00\x00"
+      header_length = data.slice!(0, 4).unpack("i*")[0]
+      data.slice!(0, header_length)
+      @zip = data
+    else
+      fail "unsupported CRX file format version: #{@version}"
+    end
     self
   end
 
@@ -35,16 +44,14 @@ class CrxUnpack
     Dir.chdir(dest) do
       zip_file = 'extension.zip'
       open(zip_file, 'wb'){ |f| f.write zip }
-
-      $stdout.reopen('/dev/null') # Ignore `Invalid date/time in zip entry' warning
-      zf = Zip::ZipFile.new(zip_file)
-      zf.each do |entry|
-        zf.extract(entry, entry.to_s)
+      begin
+        zf = Zip::File.new(zip_file)
+        zf.each do |entry|
+          zf.extract(entry, entry.to_s)
+        end
+      ensure
+        File.unlink(zip_file) unless leave_zip_file
       end
-      $stdout.flush
-      $stdout.reopen(STDERR)
-
-      File.unlink(zip_file) unless leave_zip_file
     end
   end
 
